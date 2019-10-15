@@ -1,0 +1,58 @@
+version: 1
+
+formatters:
+  default:
+    format: "%(name)-15s %(asctime)s %(levelname)-8s %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+  fluent_fmt:
+    "()": fluent.handler.FluentRecordFormatter
+    format:
+      level: "%(levelname)s"
+      hostname: "%(hostname)s"
+      where: "%(module)s.%(funcName)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: default
+    stream: ext://sys.stdout
+
+  fluent:
+    class: fluent.handler.FluentHandler
+    host: fluentd
+    verbose: True
+    port: 24224
+    tag: test.logging
+    formatter: fluent_fmt
+    level: DEBUG
+
+  none:
+    class: logging.NullHandler
+
+loggers:
+  route:
+    handlers: [console, fluent]
+    level: DEBUG
+    propagate: False
+
+  method:
+    handlers: [console, fluent]
+    level: DEBUG
+    propagate: False
+
+  exception:
+    handlers: [console, fluent]
+    level: ERROR
+    propagate: False
+
+  werkzeug:
+    handlers: [console, fluent]
+    level: ERROR
+    propagate: False
+
+  '':  # root logger
+    handlers: [console, fluent]
+    level: ERROR
+    propagate: False

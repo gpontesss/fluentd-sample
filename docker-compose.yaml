@@ -1,0 +1,17 @@
+version: "3.6"
+
+services:
+  app:
+    build: .
+    ports: [8080:8080]
+    env_file: .env
+    volumes:
+      - "${PWD}/config:/etc/app"
+    environment:
+      LOG_CONFIG_FILE: /etc/app/logging.yaml
+
+  fluentd:
+    image: fluent/fluentd:v1.7.3-1.0
+    volumes:
+      - "./config:/fluentd/etc"
+    ports: ["9880:9880", "24224:24224"]
