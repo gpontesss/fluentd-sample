@@ -3,7 +3,7 @@ import http
 from flask import Flask, request
 from flask.wrappers import Response
 
-from .log import expection_logger, method_logger, route_logger
+from .log import exception_logger, method_logger, route_logger
 
 app = Flask(__name__)
 
@@ -35,13 +35,13 @@ def before_request():
 @app.errorhandler(404)
 def handle_404(e: Exception):
     route_logger.debug(f"Tried to access path {request.path}, but it wasn't found")
-    return "Page not found", http.HTTPStatus.NOT_FOUND
+    return "Page not found\n", http.HTTPStatus.NOT_FOUND
 
 
 @app.errorhandler(Exception)
 def handle_exception(e: Exception):
-    route_logger.exception("An exception was caught!")
-    return "An internal error occured", http.HTTPStatus.INTERNAL_SERVER_ERROR
+    exception_logger.exception("An exception was caught!")
+    return "An internal error occured\n", http.HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @app.after_request

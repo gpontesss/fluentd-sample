@@ -12,7 +12,10 @@ services:
       LOG_CONFIG_FILE: /etc/app/logging.yaml
 
   fluentd:
-    image: fluent/fluentd:v1.7.3-1.0
+    image: fluentd
+    build:
+      context: .
+      dockerfile: ${PWD}/compose/fluentd/Dockerfile
     ports:
       - "9880:9880"
     secrets:

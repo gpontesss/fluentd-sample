@@ -13,4 +13,4 @@ logging.config.dictConfig(config)
 
 route_logger = logging.getLogger("route")
 method_logger = logging.getLogger("method")
-expection_logger = logging.getLogger("exception")
+exception_logger = logging.getLogger("exception")
