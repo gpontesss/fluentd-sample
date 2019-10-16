@@ -18,9 +18,9 @@ To run it you'll need [docker] and [docker compose] installed. Do the following:
 $ docker-compose up
 ```
 
-Be sure to configure your `.env` file according to the `.env.default`. After that,
-you can test the application accessing `localhost:8080/<route>`. For example, using
-`curl`:
+Be sure to configure your `.env` file according to the `.env.default`. After
+that, you can test the application accessing `localhost:8080/<route>`. For
+example, using `curl`:
 
 ```sh
 $ curl -X GET http://localhost:8080/warning
@@ -44,7 +44,21 @@ You should see the output at *fluentd's* stdout.
 
 ## Acessing Kibana
 
-Coming soon...
+To access kibana, go to http://localhost:5601. It should be all set to got.
+First, you will need to setup an index pattern.
+
++ Go to `Management` at the left panel
++ Go to `Kibana/Index Patterns` and click on `Create index pattern`
++  Name it `logstash-*`, then click on `Next step`
++ Select `@timestamp` as the time filter field name
++ Click on `Create index pattern`
+
+Now you should be able to inspect your logs.
+
++ Go to `Discover` at the left panel
++ Select the desired fields to view
+
+Now you can explore the *Kibana* dashboard as much as you want.
 
 [fluentd]: https://docs.fluentd.org/
 [elastic stack]: https://www.elastic.co/products/
