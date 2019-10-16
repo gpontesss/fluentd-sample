@@ -23,7 +23,7 @@ def warning():
 @app.route("/exception")
 def exception():
     e = EnvironmentError("Example expection")
-    method_logger.debug("Throwing {e}")
+    method_logger.debug(f"Throwing {e}")
     raise e
 
 
