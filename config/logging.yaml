@@ -11,6 +11,7 @@ formatters:
       level: "%(levelname)s"
       hostname: "%(hostname)s"
       where: "%(module)s.%(funcName)s"
+      name: "%(name)s"
 
 handlers:
   console:

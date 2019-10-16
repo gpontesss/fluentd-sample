@@ -40,7 +40,7 @@ def handle_404(e: Exception):
 
 @app.errorhandler(Exception)
 def handle_exception(e: Exception):
-    route_logger.exception(e)
+    route_logger.exception("An exception was caught!")
     return "An internal error occured", http.HTTPStatus.INTERNAL_SERVER_ERROR
 
 
