@@ -29,6 +29,19 @@ $ curl -X GET http://localhost:8080/warning
 
 You should see the logs coming out from both the `app` and `fluentd` containers.
 
+## Posting custom data to fluentd
+
+If you want to post custom data to *fluentd*, you can use its [http plugin] with
+`curl`:
+
+```sh
+$ curl -X POST -d 'json={"action":"login","user":2}' \
+    "http://localhost:9880/test.tag.here?time=1392021185"
+...
+```
+
+You should see the output at *fluentd's* stdout.
+
 ## Acessing Kibana
 
 Coming soon...
@@ -37,3 +50,4 @@ Coming soon...
 [elastic stack]: https://www.elastic.co/products/
 [docker]: https://docs.docker.com/install/linux/docker-ce/ubuntu/
 [docker compose]: https://docs.docker.com/compose/install/
+[http plugin]: https://docs.fluentd.org/v/0.12/input/http

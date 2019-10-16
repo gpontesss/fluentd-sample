@@ -1,17 +1,53 @@
-version: "3.6"
+version: "3.7"
 
 services:
   app:
     build: .
-    ports: [8080:8080]
-    volumes:
-      - "${PWD}/config:/etc/app"
+    ports:
+      - "8080:8080"
+    secrets:
+      - source: app_logging
+        target: /etc/app/logging.yaml
     environment:
       LOG_CONFIG_FILE: /etc/app/logging.yaml
 
   fluentd:
     image: fluent/fluentd:v1.7.3-1.0
-    volumes:
-      - "./config:/fluentd/etc"
     ports:
       - "9880:9880"
+    secrets:
+      - source: fluentd
+        target: /fluentd/etc/fluent.conf
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+    ports:
+      - "9200:9200"
+    secrets:
+      - source: elasticsearch
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+    volumes:
+      - "esdata:/usr/share/elasticsearch/data"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.2.0
+    ports:
+      - "5601:5601"
+    secrets:
+      - source: kibana
+        target: /usr/share/kibana/config/kibana.yml
+    depends_on: [elasticsearch]
+
+secrets:
+  kibana:
+    file: ${PWD}/config/kibana.yml
+  elasticsearch:
+    file: ${PWD}/config/elasticsearch.yml
+  fluentd:
+    file: ${PWD}/config/fluent.conf
+  app_logging:
+    file: ${PWD}/config/logging.yaml
+
+volumes:
+  esdata:
+    name: elasticsearch-data
