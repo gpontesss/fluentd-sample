@@ -10,6 +10,10 @@ services:
         target: /etc/app/logging.yaml
     environment:
       LOG_CONFIG_FILE: /etc/app/logging.yaml
+    volumes:
+      - type: bind
+        source: ${PWD}/log
+        target: /tmp/app
 
   fluentd:
     image: fluentd
@@ -18,6 +22,15 @@ services:
       dockerfile: ${PWD}/compose/fluentd/Dockerfile
     ports:
       - "9880:9880"
+    environment:
+      ES_HOST: elasticsearch
+      ES_PORT: 9200
+      LOG_PATH: /tmp/app/app.log
+    volumes:
+      - type: bind
+        source: ${PWD}/log
+        target: /tmp/app
+        read_only: true
     secrets:
       - source: fluentd
         target: /fluentd/etc/fluent.conf
@@ -37,11 +50,15 @@ services:
     image: docker.elastic.co/kibana/kibana:7.4.0
     ports:
       - "5601:5601"
+    environment:
+      ES_HOST: elasticsearch
+      ES_PORT: 9200
     secrets:
       - source: kibana
         target: /usr/share/kibana/config/kibana.yml
     depends_on: [elasticsearch]
 
+# It's shame that docker doesn't let you use the "configs" outside of a swarm :(
 secrets:
   kibana:
     file: ${PWD}/config/kibana.yml

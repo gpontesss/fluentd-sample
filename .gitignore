@@ -7,4 +7,5 @@ venv/
 .env
 
 esdata/
+log/^.gitkeep
 *.log*
