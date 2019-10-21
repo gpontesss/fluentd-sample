@@ -3,10 +3,9 @@ import http
 from flask import Flask, request
 from flask.wrappers import Response
 
-from .log import exception_logger, method_logger, route_logger
+from .loggers import exception_logger, method_logger, route_logger
 
 app = Flask(__name__)
-
 
 @app.route("/")
 def root():

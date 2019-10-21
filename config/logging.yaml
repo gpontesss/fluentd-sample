@@ -13,12 +13,28 @@ formatters:
       where: "%(module)s.%(funcName)s"
       name: "%(name)s"
 
+  str_fluent_fmt:
+    "()": "fluentd_example.formatters.StringFluentRecordFormatter"
+    format:
+      level: "%(levelname)s"
+      hostname: "%(hostname)s"
+      where: "%(module)s.%(funcName)s"
+      name: "%(name)s.str"
+
 handlers:
   console:
     class: logging.StreamHandler
     level: DEBUG
     formatter: default
     stream: ext://sys.stdout
+
+  rotating_file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: str_fluent_fmt
+    filename: app.log
+    maxBytes: 8192
+    backupCount: 1
 
   fluent:
     class: fluent.handler.FluentHandler
@@ -33,20 +49,25 @@ handlers:
     class: logging.NullHandler
 
 loggers:
-  route:
-    handlers: [console, fluent]
+  app:
+    handlers: [console, fluent, rotating_file]
     level: DEBUG
     propagate: False
 
-  method:
-    handlers: [console, fluent]
+  "app.route":
+    handlers: []
     level: DEBUG
-    propagate: False
+    propagate: True
 
-  exception:
-    handlers: [console, fluent]
+  "app.method":
+    handlers: []
+    level: DEBUG
+    propagate: True
+
+  "app.exception":
+    handlers: []
     level: ERROR
-    propagate: False
+    propagate: True
 
   werkzeug:
     handlers: [console, fluent]
@@ -56,4 +77,3 @@ loggers:
   '':  # root logger
     handlers: [console, fluent]
     level: ERROR
-    propagate: False
